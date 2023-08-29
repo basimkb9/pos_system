@@ -12,8 +12,6 @@ public class TransactionsUI {
         JFrame trMainFrame = new JFrame("Transactions");
         trMainFrame.setLayout(new BorderLayout());
 
-        JPanel topOptions = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
         String[][] data = trService.getAllTransactions();
 
         String[] columns = {"ID","TRANSACTION DATE","TOTAL AMOUNT","PAYMENT METHOD"};
@@ -39,7 +37,7 @@ public class TransactionsUI {
 
         backBtn.addActionListener(e -> {
             trMainFrame.dispose();
-            new NavUI("admin");
+            new NavUI("administrator");
         });
 
 
