@@ -27,6 +27,11 @@
             <version>1.18.28</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
 </project>

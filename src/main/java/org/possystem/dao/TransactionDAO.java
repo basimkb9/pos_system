@@ -1,10 +1,10 @@
 package org.possystem.dao;
 
-import com.sun.corba.se.impl.orb.PrefixParserAction;
 import org.possystem.domain.Transaction;
 import org.possystem.mapper.TransactionMapper;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,13 +84,13 @@ public class TransactionDAO extends BaseDAO implements ICrud<Transaction> {
 
             List<Transaction> trDataSet = transactionMapper.resultSetToList(rs);
 
-            for (int i = 0; i < trDataSet.size(); i++) {
-                String id = String.valueOf(trDataSet.get(i).getId());
-                String trDate = String.valueOf(trDataSet.get(i).getTransactionDate());
-                String amountPaid = String.valueOf(trDataSet.get(i).getAmountPaid());
-                String paymentMethod = String.valueOf(trDataSet.get(i).getPaymentMethod());
+            for (Transaction transaction : trDataSet) {
+                String id = String.valueOf(transaction.getId());
+                String trDate = String.valueOf(transaction.getTransactionDate());
+                String amountPaid = String.valueOf(transaction.getAmountPaid());
+                String paymentMethod = String.valueOf(transaction.getPaymentMethod());
 
-                String[] row = {id,trDate,amountPaid,paymentMethod};
+                String[] row = {id, trDate, amountPaid, paymentMethod};
                 trList.add(row);
             }
 
@@ -100,5 +100,57 @@ public class TransactionDAO extends BaseDAO implements ICrud<Transaction> {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public List<String[]> getByDate(LocalDate date) {
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from transactions where tr_date = ?");
+            ps.setDate(1, Date.valueOf(date));
+
+            ResultSet rs = ps.executeQuery();
+
+            List<Transaction> trDataSet = transactionMapper.resultSetToList(rs);
+            List<String[]> trList = new ArrayList<>();
+
+            for (Transaction transaction : trDataSet) {
+                String id = String.valueOf(transaction.getId());
+                String trDate = String.valueOf(transaction.getTransactionDate());
+                String amountPaid = String.valueOf(transaction.getAmountPaid());
+                String paymentMethod = String.valueOf(transaction.getPaymentMethod());
+
+                String[] row = {id, trDate, amountPaid, paymentMethod};
+                trList.add(row);
+            }
+            return trList;
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<String[]> getByDateBetween(LocalDate startDate, LocalDate endDate) {
+        try{
+            PreparedStatement ps = conn.prepareStatement("select * from transactions where tr_date between ? and ?");
+            ps.setDate(1, Date.valueOf(startDate));
+            ps.setDate(2, Date.valueOf(endDate));
+
+            ResultSet rs = ps.executeQuery();
+
+            List<Transaction> trDataSet = transactionMapper.resultSetToList(rs);
+            List<String[]> trList = new ArrayList<>();
+
+            for (Transaction transaction : trDataSet) {
+                String id = String.valueOf(transaction.getId());
+                String trDate = String.valueOf(transaction.getTransactionDate());
+                String amountPaid = String.valueOf(transaction.getAmountPaid());
+                String paymentMethod = String.valueOf(transaction.getPaymentMethod());
+
+                String[] row = {id, trDate, amountPaid, paymentMethod};
+                trList.add(row);
+            }
+            return trList;
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 }
